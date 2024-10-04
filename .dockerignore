@@ -1,0 +1,6 @@
+out
+.next
+.git
+node_modules
+next-env.d.ts
+Dockerfile

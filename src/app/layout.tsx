@@ -1,8 +1,28 @@
+'use client'
+
 import Link from 'next/link';
+import Content from '@/content';
 import './globals.css';
-import { ReactNode } from 'react';
+import { Dispatch, ReactNode, SetStateAction } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const [footerHeight, setFooterHeight] = useState(0);
+  
+  const setElementHeight = (element: string, setter: Dispatch<SetStateAction<number>>) => {
+    const domElement = document.querySelector(element);
+    if (domElement) {
+      const height = domElement.getBoundingClientRect().height;
+      setter(height);
+    }
+  };
+
+  useEffect(() => {
+    setElementHeight('header', setHeaderHeight);
+    setElementHeight('footer', setFooterHeight);
+  }, []);
+
   return (
     <html lang="en">
       <head>
@@ -25,38 +45,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <ul
                 className="flex justify-center space-x-6"
               >
-                <li>
-                  <Link href="/" className="hover:underline">
-                    Home
+                {Object.keys(Content.pages).map(page => <li key={page}>
+                  <Link href={`${page}`} className="hover:underline">
+                    {Content.pages[page].title}
                   </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:underline">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/projects/" className="hover:underline">
-                    Projects
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:underline">
-                    Skills
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:underline">
-                    Contact
-                  </Link>
-                </li>
+                </li>)}
               </ul>
             </nav>
           </div>
         </header>
-        <main>{children}</main>
+        <main style={{minHeight:`calc(100vh - ${headerHeight + footerHeight}px)`}}>{children}</main>
         <footer
-          className="py-6 text-center bg-tertiary text-text dark:bg-foreground dark:text-text-dark"
+          className="py-6 text-center bg-foreground-dark dark:bg-foreground dark:text-text-dark"
         >
           <div className="container mx-auto">
             <p>

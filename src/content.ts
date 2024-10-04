@@ -2,15 +2,19 @@ import { PageProps } from "@/components/Page"
 
 type WebsiteProps = {
     title: string,
-    subTitle?:string | null ,
+    subtitle?:string | null ,
     pages: { [key : string]: PageProps },
 }
 
 const Content: WebsiteProps = {
   "title": "Jegor van Opdorp",
-  "subTitle":"Full-stack Developer with a Passion for Cloud and Hardware Simulations",
+  "subtitle":"Full-stack Developer with a Passion for Cloud and Hardware Simulations",
   "pages": {
-    "projects": {
+    "/": {
+      title: "Jodporp's website",
+      subtitle: "Welcome, please feel free to browse around"
+    },
+    "/projects": {
       "title": "Projects",
       "subtitle": "A collection of all my projects, both personal & professional.",
       sections: [

@@ -13,12 +13,6 @@ body {
   }
 }
 
-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-}
-
 a {
   color: theme('colors.primary');
 }

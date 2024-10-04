@@ -1,5 +1,4 @@
 import { Section, SectionProps } from '@/components/Section';
-import { randomUUID } from 'crypto';
 
 export type PageProps = {
   title: string;
@@ -20,7 +19,7 @@ export default function Page({title, subtitle, sections}:PageProps) {
           </p>
         </div>
       </section>
-      {sections?.map((sectionProps, index) => <Section {...sectionProps} isEven={index % 2 === 1} key={randomUUID()}/>)}
+      {sections?.map((sectionProps, index) => <Section {...sectionProps} isEven={index % 2 === 1} key={sectionProps.title}/>)}
     </>
   );
 }

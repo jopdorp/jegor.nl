@@ -9,6 +9,6 @@ npm run build
 
 # Rsync the build to the remote NAS location
 echo "Deploying to NAS..."
-rsync -avz --delete ./out/ admin@10.8.0.1:/share/CE_CACHEDEV1_DATA/Web/
+rsync -avz --delete --exclude='wiki' ./out/ admin@10.8.0.1:/share/CE_CACHEDEV1_DATA/Web/
 
 echo "Deployment complete."
