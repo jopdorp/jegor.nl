@@ -6,8 +6,6 @@ COPY package*.json ./
 
 RUN npm install
 
-
-# copy . to . but do not copy .next node_modules and out
 COPY . .
 
 RUN npm run build

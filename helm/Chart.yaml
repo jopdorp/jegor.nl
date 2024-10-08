@@ -1,0 +1,3 @@
+name: jegor.nl
+version: 0.1.0
+description: A Helm chart to deploy a jegor.nl app on Kubernetes

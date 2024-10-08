@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-nextjs-app
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-nextjs-app
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-nextjs-app
+    spec:
+      containers:
+      - name: nextjs-container
+        image: "{{ .Values.dockerRegistry }}/jegor-nl:{{ .Values.imageTag }}"
+        ports:
+        - containerPort: {{ .Values.servicePort }}
+        env:
+        - name: NODE_ENV
+          value: "production"

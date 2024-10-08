@@ -4,3 +4,4 @@ out
 node_modules
 next-env.d.ts
 Dockerfile
+k8s

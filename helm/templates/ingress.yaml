@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-nextjs-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+spec:
+  tls:
+  - hosts:
+    - "{{ .Values.ingressHost }}"
+    secretName: {{ .Release.Name }}-tls-cert
+  rules:
+  - host: "{{ .Values.ingressHost }}"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Release.Name }}-nextjs-service
+            port:
+              number: 80
