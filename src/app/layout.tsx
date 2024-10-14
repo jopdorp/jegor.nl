@@ -1,7 +1,7 @@
 'use client';
 
 import './globals.css';
-import { Dispatch, ReactNode, SetStateAction, useContext } from 'react';
+import { Dispatch, ReactNode, SetStateAction } from 'react';
 import { useState, useEffect } from 'react';
 import { PageProps } from '@/components/Page';
 import Menu from '@/components/Menu';

@@ -4,14 +4,13 @@ import { WebsiteProps } from "@/app/layout";
 import { PageProps } from "@/components/Page"
 import { GraphQLClient } from 'graphql-request';
 import { marked } from 'marked';
+import dotenv from "dotenv";
+import { SectionProps } from "@/components/Section";
+import { CardProps } from "@/components/Card";
 
-require('dotenv').config();
+dotenv.config()
 
-const client = new GraphQLClient('http://localhost:3000/api/graphql', {
-  headers: {
-    "Authorization": `Bearer ${process.env.API_TOKEN}`
-  }
-});
+const  client = new GraphQLClient(process.env.NODE_ENV === "production" ? 'https:/jopdorp.nl/api/graphql' : 'http://localhost:3000/api/graphql');
 
 type Page = {
   id: string;
@@ -93,8 +92,8 @@ function parsePageContent(content: string) {
     sections: [],
   };
 
-  let currentSection: any = null;
-  let currentCard: any = null;
+  let currentSection: SectionProps;
+  let currentCard: CardProps;
   let isPageSubtitle = true; // To track if we are capturing the page subtitle
   let isSectionSubtitle = false; // To track if we are capturing the section subtitle
 
@@ -106,14 +105,14 @@ function parsePageContent(content: string) {
         isPageSubtitle = true; // The content after this will be the page subtitle
       } else if (token.depth === 2) {
         // Section title
-        currentSection = { title: token.text, subtitle: null, cards: [] };
+        currentSection = { title: token.text, cards: [] };
         page.sections!.push(currentSection);
         isPageSubtitle = false; // No longer capturing the page subtitle
         isSectionSubtitle = true; // The content after this will be the section subtitle
       } else if (token.depth === 3 && currentSection) {
         // Card title
         currentCard = { projectName: token.text, projectDescription: '', url: '#' };
-        currentSection.cards.push(currentCard);
+        currentSection.cards!.push(currentCard);
         isSectionSubtitle = false; // No longer capturing the section subtitle
       }
     } else if (token.type === 'paragraph') {
@@ -123,7 +122,6 @@ function parsePageContent(content: string) {
         isPageSubtitle = false; // Page subtitle captured, no need to capture more
       } else if (isSectionSubtitle && currentSection) {
         // Capture section subtitle
-        currentSection.subtitle = token.text;
         isSectionSubtitle = false; // Section subtitle captured
       } else if (currentCard) {
         // Capture card description

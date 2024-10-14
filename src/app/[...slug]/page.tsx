@@ -15,7 +15,7 @@ const DynamicPage = () => {
   }
 
   // Remove leading slash from pathname to match the keys in content.pages
-  const currentPage = pathname === '/' ? '/home' : pathname;
+  const currentPage = pathname === "" ? '/home' : pathname;
 
   // Check if the page exists in the content
   if (!content.pages[`website${currentPage}`]) {

@@ -12,11 +12,23 @@ spec:
       labels:
         app: {{ .Release.Name }}-nextjs-app
     spec:
+      imagePullSecrets:
+      - name: harbor-credentials
       containers:
       - name: nextjs-container
-        image: "{{ .Values.dockerRegistry }}/jegor-nl:{{ .Values.imageTag }}"
+        image: "{{ .Values.dockerRegistry }}/jegornl:{{ .Values.imageTag }}"
         ports:
         - containerPort: {{ .Values.servicePort }}
         env:
         - name: NODE_ENV
           value: "production"
+        - name: API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: jegor-nl-api
+              key: API_TOKEN
+        - name: API_URL
+          valueFrom:
+            secretKeyRef:
+              name: jegor-nl-api
+              key: API_URL

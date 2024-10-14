@@ -1,24 +1,21 @@
-import { NextResponse } from 'next/server';
-require('dotenv').config();
+import { NextRequest, NextResponse } from 'next/server';
+import dotenv from "dotenv";
 
-export async function POST(request) {
-  const adminToken = process.env.API_TOKEN;
+dotenv.config();
 
-  if (!adminToken) {
-    return NextResponse.json({ error: 'Admin token is missing' }, { status: 500 });
-  }
+const API_TOKEN = process.env.API_TOKEN!;
+const API_URL = process.env.API_URL!;
 
-  // Extract the incoming request body
-  const body = await request.json();
+export async function POST(request: NextRequest) {
+  const rawBody = await request.text();
 
-  // Forward the request body to the GraphQL API
-  const secureData = await fetch('https://wiki.jopdorp.nl/graphql', {
+  const secureData = await fetch(API_URL, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${adminToken}`,
+      'Authorization': `Bearer ${API_TOKEN}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body), // Pass the incoming body to the GraphQL API
+    body: rawBody, // Pass the incoming body to the GraphQL API
   });
 
   const data = await secureData.json();
