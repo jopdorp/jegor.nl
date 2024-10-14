@@ -18,3 +18,7 @@ ingress:
         - "wiki.jegor.nl"
         - "wiki.jopdorp.nl"
       secretName: wiki-js-tls  # cert-manager will manage this secret
+
+postgresql:
+  existingSecret: postgresql-password
+  existingSecretKey: postgresql-password
