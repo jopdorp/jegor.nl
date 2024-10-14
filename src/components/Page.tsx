@@ -1,8 +1,10 @@
+'use client';
+
 import { Section, SectionProps } from '@/components/Section';
 
 export type PageProps = {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   sections?: SectionProps[];
 }
 

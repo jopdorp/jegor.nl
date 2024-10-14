@@ -1,6 +1,6 @@
-import { randomUUID } from "crypto";
-import { Card, CardProps } from "./Card";
+'use client';
 
+import { Card, CardProps } from "./Card";
 
 export type SectionProps =  { 
   title: string, 
@@ -15,7 +15,7 @@ export const Section = ({title, isEven=false, cards=[]}:SectionProps) => {
         {title}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {cards.map(cardProps => <Card {...cardProps} key={randomUUID()}/>  ) }
+        {cards.map(cardProps => <Card {...cardProps} key={cardProps.projectName}/>  ) }
       </div>
     </div>
   </section>

@@ -1,0 +1,25 @@
+ingress:
+  enabled: true
+  className: "traefik"  # Assuming Traefik is the ingress controller
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"  # Use the existing ClusterIssuer
+  hosts:
+    - host: "wiki.jegor.nl"
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: "wiki.jopdorp.nl"
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - "wiki.jegor.nl"
+        - "wiki.jopdorp.nl"
+      secretName: wiki-js-tls  # cert-manager will manage this secret
+env:
+  - name: CORS_ENABLED
+    value: "true"  # Enable CORS
+  - name: CORS_ORIGIN
+    value: "*"  # Allow all origins, or specify a domain like 'https://example.com'
