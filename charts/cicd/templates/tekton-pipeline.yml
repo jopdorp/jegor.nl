@@ -98,7 +98,7 @@ spec:
               git add charts/jegor-nl/values.yaml
               git add charts/cicd/values.yaml
               git commit -m "Update to image tag $(params.imageTag)"
-              git push origin master
+              git push origin main
 
     - name: upgrade-helm-chart
       runafter: [update-argocd-application-and-values, build-docker-image]
