@@ -19,7 +19,7 @@ spec:
                 - push
             - name: "secretToken"
               value:
-                secretName: github-secret  # Secret name
+                secretName: tekton-webhook-secret  # Secret name
                 secretKey: token           # Key inside the secret
         - ref:
             name: "cel"
