@@ -1,0 +1,25 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: github-pr-template
+spec:
+  params:
+    - name: gitrepositoryurl
+    - name: branch
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: github-pr-pipelinerun-
+      spec:
+        pipelineRef:
+          name: {{ .Release.Name }}-tekton-build-pipeline
+        workspaces:
+          - name: source-workspace
+            persistentVolumeClaim:
+              claimName: jegornl-pvc
+        params:
+          - name: repo-url
+            value: $(params.gitrepositoryurl)
+          - name: branch
+            value: $(params.branch)
