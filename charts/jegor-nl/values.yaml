@@ -1,0 +1,7 @@
+replicaCount: 2
+imageTag: v0.1.5
+servicePort: 3000
+ingressHost: "jopdorp.nl"
+releaseName: jegor-nl
+dockerRegistry: harbor.k8s.jegor.nl/jopdorp
+certManagerEmail: "admin@jegor.nl"

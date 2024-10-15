@@ -1,10 +1,12 @@
+'use client';
+
 import { Url } from "next/dist/shared/lib/router/router"
 import Link from "next/link"
 
 export type CardProps = {
   projectName: string,
   projectDescription: string,
-  url: Url,
+  url?: Url,
 }
   
 export const Card = ({projectName, projectDescription, url="#"}:CardProps) => {

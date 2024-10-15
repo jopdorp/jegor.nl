@@ -1,0 +1,24 @@
+ingress:
+  enabled: true
+  className: "traefik"
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  hosts:
+    - host: "wiki.jegor.nl"
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: "wiki.jopdorp.nl"
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - "wiki.jegor.nl"
+        - "wiki.jopdorp.nl"
+      secretName: wiki-js-tls  # cert-manager will manage this secret
+
+postgresql:
+  existingSecret: postgresql-password
+  existingSecretKey: postgresql-password

@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Release.Name }}-deploy-pipeline
+  namespace: argocd
+spec:
+  project: jopdorp
+  source:
+    repoURL: "https://github.com/jopdorp/jegor.nl"
+    path: charts/jegor-nl
+    targetRevision: "refs/tags/{{ .Values.imageTag }}"
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: jegor-nl
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

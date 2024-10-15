@@ -1,0 +1,28 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: tekton-github-listener
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - name: github-trigger
+      bindings:
+        - ref: github-binding
+      template:
+        ref: github-template
+      interceptors:
+        - ref:
+            name: "github"
+          params:
+            - name: eventTypes
+              value:
+                - push
+            - name: "secretToken"
+              value:
+                secretName: github-secret  # Secret name
+                secretKey: token           # Key inside the secret
+        - ref:
+            name: "cel"
+          params:
+            - name: "filter"  # Correct structure for CEL filter
+              value: "body.ref == 'refs/heads/main'"

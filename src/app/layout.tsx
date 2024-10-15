@@ -1,15 +1,20 @@
-'use client'
+'use client';
 
-import Link from 'next/link';
-import Content from '@/content';
 import './globals.css';
 import { Dispatch, ReactNode, SetStateAction } from 'react';
 import { useState, useEffect } from 'react';
+import { PageProps } from '@/components/Page';
+import Menu from '@/components/Menu';
+import Providers from './Providers';
+
+export type WebsiteProps = {
+  pages: { [key: string]: PageProps };
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const [headerHeight, setHeaderHeight] = useState(0);
   const [footerHeight, setFooterHeight] = useState(0);
-  
+
   const setElementHeight = (element: string, setter: Dispatch<SetStateAction<number>>) => {
     const domElement = document.querySelector(element);
     if (domElement) {
@@ -23,51 +28,29 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     setElementHeight('footer', setFooterHeight);
   }, []);
 
+  // Ensure content is loaded
   return (
     <html lang="en">
       <head>
         <title>Portfolio - Jegor van Opdorp</title>
       </head>
-      <body
-        className="bg-background dark:bg-background-dark dark:text-text-dark"
-      >
-        <header
-          className="py-6 text-center"
-        >
-          <div className="container mx-auto">
-            <h1 className="text-4xl font-bold">
-              Jegor van Opdorp
-            </h1>
-            <p className="mt-2">
-              Full-stack Developer with a Passion for Cloud and Hardware Simulations
-            </p>
-            <nav className="mt-4">
-              <ul
-                className="flex justify-center space-x-6"
-              >
-                {Object.keys(Content.pages).map(page => <li key={page}>
-                  <Link href={`${page}`} className="hover:underline">
-                    {Content.pages[page].title}
-                  </Link>
-                </li>)}
-              </ul>
-            </nav>
-          </div>
-        </header>
-        <main style={{minHeight:`calc(100vh - ${headerHeight + footerHeight}px)`}}>{children}</main>
-        <footer
-          className="py-6 text-center bg-foreground-dark dark:bg-foreground dark:text-text-dark"
-        >
-          <div className="container mx-auto">
-            <p>
-              &copy; 2024 Jegor van Opdorp. Follow me on{' '}
-              <a href="https://github.com/jopdorp">
-                GitHub
-              </a>
-            </p>
-          </div>
-        </footer>
+      <body className="bg-background dark:bg-background-dark dark:text-text-dark">
+        <Providers>
+          <Menu/>          
+          <main style={{ minHeight: `calc(100vh - ${headerHeight + footerHeight}px)` }}>
+            {children}
+          </main>
+          <footer className="py-6 text-center bg-foreground-dark dark:bg-foreground dark:text-text-dark">
+            <div className="container mx-auto">
+              <p>
+                &copy; 2024 Jegor van Opdorp. Follow me on{' '}
+                <a href="https://github.com/jopdorp">GitHub</a>
+              </p>
+            </div>
+          </footer>
+        </Providers>
       </body>
     </html>
   );
 }
+

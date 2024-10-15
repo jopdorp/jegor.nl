@@ -1,7 +1,0 @@
-replicaCount: 2
-imageTag: 0.1.0
-servicePort: 3000
-ingressHost: "jegor.nl"
-releaseName: jegor-app
-dockerRegistry: localhost:32000
-certManagerEmail: "admin@jegor.nl"
