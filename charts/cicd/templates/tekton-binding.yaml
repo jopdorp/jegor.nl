@@ -5,6 +5,6 @@ metadata:
 spec:
   params:
     - name: gitrepositoryurl
-      value: $(body.repository.clone_url)
+      value: $(body.repository.clone_url)  # URL to clone the repository
     - name: branch
-      value: $(body.ref)  # Typically holds the branch information
+      value: $(body.pull_request.base.ref)  # The base branch (target) of the PR
