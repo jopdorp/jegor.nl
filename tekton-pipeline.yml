@@ -2,7 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: nextjs-build-pipeline
-  namespace: default
+  namespace: jegor-nl
 spec:
   tasks:
     - name: build-docker-image

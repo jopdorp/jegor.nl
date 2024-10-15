@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nextjs-deploy-pipeline
+  namespace: jegor-nl
+spec:
+  project: jegornl
+  source:
+    repoURL: "https://github.com/jopdorp/jegor.nl"
+    path: charts/nextjs-app
+    targetRevision: "refs/tags/<latest_tag>"
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
