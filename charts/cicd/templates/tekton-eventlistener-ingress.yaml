@@ -16,8 +16,8 @@ spec:
               service:
                 name: tekton-webhook-listener
                 port:
-                  number: 8080  # Ensure this matches the service port
+                  number: 8080
   tls:
     - hosts:
         - webhook.tekton.jegor-nl.k8s.jegor.nl
-      secretName: tekton-listener-tls  # TLS secret that will store the certificate
+      secretName: tekton-listener-tls

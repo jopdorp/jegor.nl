@@ -37,6 +37,10 @@ spec:
               - name: github-token
                 mountPath: /root/.git-credentials
                 subPath: token
+        volumes:
+          - name: github-token
+            secret:
+              secretName: github-secret
 
     - name: determine-next-image-tag
       runAfter: [pull-code]
@@ -139,3 +143,7 @@ spec:
               - name: github-token
                 mountPath: /root/.git-credentials
                 subPath: token
+        volumes:
+          - name: github-token
+            secret:
+              secretName: github-secret

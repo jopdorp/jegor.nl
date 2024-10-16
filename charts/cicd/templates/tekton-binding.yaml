@@ -1,10 +1,10 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerBinding
 metadata:
-  name: github-pr-binding
+  name: github-push-binding
 spec:
   params:
     - name: gitrepositoryurl
-      value: $(body.repository.clone_url)  # URL to clone the repository
+      value: $(body.repository.clone_url)
     - name: branch
-      value: $(body.pull_request.base.ref)  # The base branch (target) of the PR
+      value: $(body.ref.split('/')[2])

@@ -1,19 +1,19 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
-  name: github-pr-template
+  name: github-push-template
 spec:
   params:
-    - name: gitrepositoryurl  # Repository URL from the binding
-    - name: branch            # Branch name from the binding
+    - name: gitrepositoryurl
+    - name: branch
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: github-pr-pipelinerun-
+        generateName: github-push-pipelinerun-
       spec:
         pipelineRef:
-          name: tekton-build-pipeline  # Reference to your pipeline
+          name: tekton-build-pipeline
         workspaces:
           - name: source-workspace
             persistentVolumeClaim:
