@@ -3,7 +3,7 @@ kind: EventListener
 metadata:
   name: tekton-github-listener
 spec:
-  serviceAccountName: pipeline
+  serviceAccountName: tekton-robot
   triggers:
     - name: github-push-trigger
       bindings:
