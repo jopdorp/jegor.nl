@@ -42,15 +42,22 @@ spec:
             - name: eventTypes
               value:
                 - push
-            - name: "secretRef"
+            - name: secretRef
               value:
                 secretName: tekton-webhook-secret
                 secretKey: token
         - ref:
             name: cel
           params:
-            - name: "filter"
+            - name: filter
               value: body.ref == 'refs/heads/main'
+        - ref:
+            name: cel
+          params:
+            - name: overlays
+              value:
+                - key: branch
+                  expression: "body.ref.split('/').last()"
 ---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerBinding
@@ -61,7 +68,7 @@ spec:
     - name: gitrepositoryurl
       value: $(body.repository.clone_url)
     - name: branch
-      value: $(body.ref.split('/')[2])
+      value: $(body.branch)
 ---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
