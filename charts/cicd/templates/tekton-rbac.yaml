@@ -45,5 +45,9 @@ metadata:
   name: tekton-triggers-role
 rules:
   - apiGroups: ["triggers.tekton.dev"]
-    resources: ["eventlisteners", "triggers", "triggerbindings", "triggertemplates", "interceptors", "pipelineruns"]
+    resources: ["eventlisteners", "triggers", "triggerbindings", "triggertemplates", "interceptors"]
+    verbs: ["get", "list", "watch", "create", "update", "delete"]    
+  - apiGroups: ["tekton.dev"]
+    resources: ["pipelineruns"]
     verbs: ["get", "list", "watch", "create", "update", "delete"]
+    
