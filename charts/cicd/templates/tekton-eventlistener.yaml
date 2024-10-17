@@ -1,3 +1,28 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tekton-github-listener-ingress
+  annotations:
+    kubernetes.io/ingress.className: "traefik"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  rules:
+    - host: webhook.tekton.jegor-nl.k8s.jegor.nl
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: el-tekton-github-listener
+                port:
+                  number: 8080
+  tls:
+    - hosts:
+        - webhook.tekton.jegor-nl.k8s.jegor.nl
+      secretName: tekton-listener-tls
+---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: EventListener
 metadata:
@@ -24,5 +49,42 @@ spec:
         - ref:
             name: cel
           params:
-            - name: "filter"  # Correct structure for CEL filter
+            - name: "filter"
               value: "body.ref.split('/')[2] == 'main'"
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: github-push-binding
+spec:
+  params:
+    - name: gitrepositoryurl
+      value: $(body.repository.clone_url)
+    - name: branch
+      value: $(body.ref.split('/')[2])
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: github-push-template
+spec:
+  params:
+    - name: gitrepositoryurl
+    - name: branch
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: github-push-pipelinerun-
+      spec:
+        params:
+          - name: repo-url
+            value: $(params.gitrepositoryurl)
+          - name: branch
+            value: $(params.branch)
+        pipelineRef:
+          name: tekton-build-pipeline
+        workspaces:
+          - name: source-workspace
+            persistentVolumeClaim:
+              claimName: jegornl-pvc
