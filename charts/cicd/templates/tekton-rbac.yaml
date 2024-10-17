@@ -11,7 +11,7 @@ metadata:
 rules:
   - apiGroups: ["triggers.tekton.dev"]
     resources: ["clusterinterceptors", "clustertriggerbindings"]
-    verbs: ["get", "list", "watch", "create", "update", "delete"]
+    verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -45,5 +45,5 @@ metadata:
   name: tekton-triggers-role
 rules:
   - apiGroups: ["triggers.tekton.dev"]
-    resources: ["eventlisteners", "triggers", "triggerbindings", "triggertemplates", "interceptors"]
+    resources: ["eventlisteners", "triggers", "triggerbindings", "triggertemplates", "interceptors", "pipelineruns"]
     verbs: ["get", "list", "watch", "create", "update", "delete"]
