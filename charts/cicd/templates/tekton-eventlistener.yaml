@@ -68,7 +68,7 @@ spec:
     - name: gitrepositoryurl
       value: $(body.repository.clone_url)
     - name: branch
-      value: $(body.branch)
+      value: $(extensions.branch)
 ---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
