@@ -8,7 +8,7 @@ spec:
     - name: source-workspace
     
   params:
-    - name: repo-url
+    - name: gitrepositoryurl
       type: string
       description: Repo url
     - name: branch
@@ -21,19 +21,19 @@ spec:
         - name: source-workspace
           workspace: source-workspace
       params:
-        - name: repo-url
-          value: "$(params.repo-url)"
+        - name: gitrepositoryurl
+          value: "$(params.gitrepositoryurl)"
         - name: branch
           value: "$(params.branch)"
       taskSpec:
         params:
-          - name: repo-url
+          - name: gitrepositoryurl
           - name: branch
         steps:
           - name: clone-repo
             image: alpine/git
             script: |
-              git clone $(params.repo-url) -b $(params.branch) /workspace/source
+              git clone $(params.gitrepositoryurl) -b $(params.branch) /workspace/source
             volumeMounts:
               - name: github-token
                 mountPath: /root/.git-credentials
@@ -124,21 +124,21 @@ spec:
         - name: source-workspace
           workspace: source-workspace
       params:
-        - name: repo-url
-          value: "$(params.repo-url)"
+        - name: gitrepositoryurl
+          value: "$(params.gitrepositoryurl)"
         - name: imageTag
           value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
       taskSpec:
         params:
           - name: imageTag
-          - name: repo-url
+          - name: gitrepositoryurl
         steps:
           - name: create-tag
             image: curlimages/curl:7.78.0
             script: |
               curl -H "Authorization: token $$(cat /root/.git-credentials)" \
                    -H "Content-Type: application/json" \
-                   -X POST $(params.repo-url)/git/refs \
+                   -X POST $(params.gitrepositoryurl)/git/refs \
                    -d '{"ref": "refs/tags/$(params.imageTag)", "sha": "$$(git rev-parse HEAD)"}'
             volumeMounts:
               - name: github-token

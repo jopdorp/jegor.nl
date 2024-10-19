@@ -85,7 +85,7 @@ spec:
         generateName: github-push-pipelinerun-
       spec:
         params:
-          - name: repo-url
+          - name: gitrepositoryurl
             value: $(params.gitrepositoryurl)
           - name: branch
             value: $(params.branch)
