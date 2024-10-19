@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: {{ .Release.Name }}-tekton-build-pipeline
+  name: tekton-build-pipeline
 spec:
   workspaces:
     - name: source-workspace
