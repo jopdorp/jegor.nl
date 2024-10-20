@@ -10,10 +10,8 @@ spec:
   params:
     - name: gitrepositoryurl
       type: string
-      description: Repo url
     - name: branch
       type: string
-      description: Branch or tag
 
   tasks:
     - name: pull-code
@@ -28,7 +26,9 @@ spec:
       taskSpec:
         params:
           - name: gitrepositoryurl
+            type: string
           - name: branch
+            type: string
         steps:
           - name: clone-repo
             image: alpine/git
@@ -60,8 +60,8 @@ spec:
               IFS='.' read -r major minor patch <<< "$current_version"
               new_version="$major.$minor.$((patch+1))"
               echo "New version: $new_version"
-              echo "$new_version" > /tekton/results/new-image-tag
-
+              echo "$new_version" > $(results.new-image-tag.path)
+        
     - name: build-docker-image
       runAfter: [determine-next-image-tag]
       workspaces:
@@ -72,7 +72,8 @@ spec:
           value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
       taskSpec:
         params:
-        - name: imageTag
+          - name: imageTag
+            type: string
         steps:
           - name: build
             image: docker:20.10
@@ -131,7 +132,9 @@ spec:
       taskSpec:
         params:
           - name: imageTag
+            type: string
           - name: gitrepositoryurl
+            type: string
         steps:
           - name: create-tag
             image: curlimages/curl:7.78.0
