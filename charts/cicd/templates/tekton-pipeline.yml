@@ -33,7 +33,12 @@ spec:
           - name: clone-repo
             image: alpine/git
             script: |
-              git clone $(params.gitrepositoryurl) -b $(params.branch) /workspace/source
+              # Export parameters as environment variables
+              export GIT_REPOSITORY_URL=$(params.gitrepositoryurl)
+              export BRANCH=$(params.branch)
+
+              # Use these variables in the git clone command
+              git clone $GIT_REPOSITORY_URL -b $BRANCH /workspace/source  
             volumeMounts:
               - name: github-token
                 mountPath: /root/.git-credentials
