@@ -155,7 +155,7 @@ spec:
             image: alpine/helm:3.11.1
             script: |
               cd /workspace/source/charts/cicd
-              helm upgrade jegor-nl-cicd . --namespace jegor-nl
+              helm upgrade jegor-nl-cicd . --namespace jegor-nl --service-account tekton-robot
 
     - name: create-github-tag
       runafter: [upgrade-helm-chart]
