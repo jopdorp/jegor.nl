@@ -6,8 +6,7 @@ metadata:
 spec:
   workspaces:
     - name: source-workspace
-    
-    
+
   params:
     - name: gitrepositoryurl
       type: string
