@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: "https://github.com/jopdorp/jegor.nl"
     path: charts/jegor-nl
-    targetRevision: "refs/tags/{{ .Values.imageTag }}"
+    targetRevision: "production"
     helm:
       valueFiles:
         - values.yaml

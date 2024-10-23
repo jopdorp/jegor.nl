@@ -164,7 +164,7 @@ spec:
               export KUBECONFIG=/kubeconfig/kubeconfig
               cd /workspace/source/charts/cicd
               helm upgrade jegor-nl-cicd . --namespace jegor-nl
-              
+
     - name: create-github-tag
       runAfter: [upgrade-helm-chart]
       workspaces:
@@ -199,6 +199,9 @@ spec:
               git fetch --all
               git tag $(params.imageTag)
               git push origin $(params.imageTag)
+              git switch production
+              git merge main
+              git push
             volumeMounts:
               - name: github-token
                 mountPath: /root/github-secret-dir
