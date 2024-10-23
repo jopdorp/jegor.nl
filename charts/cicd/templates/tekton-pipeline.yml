@@ -18,11 +18,11 @@ spec:
       workspaces:
         - name: source-workspace
           workspace: source-workspace
-      # params:
-      #   - name: gitrepositoryurl
-      #     value: $(params.gitrepositoryurl)
-      #   - name: branch
-      #     value: $(params.branch)
+      params:
+        - name: gitrepositoryurl
+          value: $(params.gitrepositoryurl)
+        - name: branch
+          value: $(params.branch)
       taskSpec:
         params:
           - name: gitrepositoryurl
