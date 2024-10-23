@@ -141,6 +141,7 @@ spec:
               - name: github-token
                 mountPath: /root/github-secret-dir
 
+
     - name: upgrade-helm-chart
       runafter: [update-argocd-application-and-values, build-docker-image]
       workspaces:
