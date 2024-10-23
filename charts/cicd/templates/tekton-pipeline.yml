@@ -65,7 +65,6 @@ spec:
               current_version=$(grep 'imageTag:' charts/jegor-nl/values.yaml | cut -d' ' -f2)
               IFS='.' read -r major minor patch <<< "$current_version"
               new_version="$major.$minor.$((patch+1))"
-              echo "New version: $new_version"
               echo "$new_version" | tee $(results.new-image-tag.path)
         
     - name: build-docker-image
