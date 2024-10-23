@@ -43,114 +43,114 @@ spec:
             secret:
               secretName: github-secret
 
-    # - name: determine-next-image-tag
-    #   runAfter: [pull-code]
-    #   workspaces:
-    #     - name: source-workspace
-    #       workspace: source-workspace
-    #   taskSpec:
-    #     results:
-    #       - name: new-image-tag
-    #     steps:
-    #       - name: increment-version
-    #         image: alpine
-    #         script: |
-    #           cd /workspace/source
-    #           current_version=$(grep 'imageTag:' charts/jegor-nl/values.yaml | cut -d' ' -f2)
-    #           IFS='.' read -r major minor patch <<< "$current_version"
-    #           new_version="$major.$minor.$((patch+1))"
-    #           echo "New version: $new_version"
-    #           echo "$new_version" > $(results.new-image-tag.path)
+    - name: determine-next-image-tag
+      runAfter: [pull-code]
+      workspaces:
+        - name: source-workspace
+          workspace: source-workspace
+      taskSpec:
+        results:
+          - name: new-image-tag
+        steps:
+          - name: increment-version
+            image: alpine
+            script: |
+              cd /workspace/source
+              current_version=$(grep 'imageTag:' charts/jegor-nl/values.yaml | cut -d' ' -f2)
+              IFS='.' read -r major minor patch <<< "$current_version"
+              new_version="$major.$minor.$((patch+1))"
+              echo "New version: $new_version"
+              echo "$new_version" > $(results.new-image-tag.path)
         
-    # - name: build-docker-image
-    #   runAfter: [determine-next-image-tag]
-    #   workspaces:
-    #     - name: source-workspace
-    #       workspace: source-workspace
-    #   params:
-    #     - name: imageTag
-    #       value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
-    #   taskSpec:
-    #     params:
-    #       - name: imageTag
-    #         type: string
-    #     steps:
-    #       - name: build
-    #         image: docker:20.10
-    #         script: |
-    #           cd /workspace/source
-    #           docker build . -t jegornl:$(params.imageTag)
-    #           docker tag jegornl:$(params.imageTag) harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag)
-    #           docker push harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag)
+    - name: build-docker-image
+      runAfter: [determine-next-image-tag]
+      workspaces:
+        - name: source-workspace
+          workspace: source-workspace
+      params:
+        - name: imageTag
+          value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
+      taskSpec:
+        params:
+          - name: imageTag
+            type: string
+        steps:
+          - name: build
+            image: docker:20.10
+            script: |
+              cd /workspace/source
+              docker build . -t jegornl:$(params.imageTag)
+              docker tag jegornl:$(params.imageTag) harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag)
+              docker push harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag)
 
-    # - name: update-argocd-application-and-values
-    #   runAfter: [determine-next-image-tag]
-    #   workspaces:
-    #     - name: source-workspace
-    #       workspace: source-workspace
-    #   params:
-    #     - name: imageTag
-    #       value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
-    #   taskSpec:
-    #     params:
-    #       - name: imageTag
-    #     steps:
-    #       - name: update-manifest-and-values
-    #         image: alpine
-    #         script: |
-    #           cd /workspace/source
-    #           sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/jegor-nl/values.yaml
-    #           sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/cicd/values.yaml
-    #           git add charts/jegor-nl/values.yaml
-    #           git add charts/cicd/values.yaml
-    #           git commit -m "Update to image tag $(params.imageTag)"
-    #           git push origin main
+    - name: update-argocd-application-and-values
+      runAfter: [determine-next-image-tag]
+      workspaces:
+        - name: source-workspace
+          workspace: source-workspace
+      params:
+        - name: imageTag
+          value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
+      taskSpec:
+        params:
+          - name: imageTag
+        steps:
+          - name: update-manifest-and-values
+            image: alpine
+            script: |
+              cd /workspace/source
+              sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/jegor-nl/values.yaml
+              sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/cicd/values.yaml
+              git add charts/jegor-nl/values.yaml
+              git add charts/cicd/values.yaml
+              git commit -m "Update to image tag $(params.imageTag)"
+              git push origin main
 
-    # - name: upgrade-helm-chart
-    #   runafter: [update-argocd-application-and-values, build-docker-image]
-    #   workspaces:
-    #     - name: source-workspace
-    #       workspace: source-workspace
-    #   taskSpec:
-    #     steps:
-    #       - name: upgrade-chart
-    #         image: alpine/helm:3.7.0
-    #         script: |
-    #           cd /workspace/source/charts/cicd
-    #           helm upgrade jegor-nl-cicd . --namespace jegor-nl
+    - name: upgrade-helm-chart
+      runafter: [update-argocd-application-and-values, build-docker-image]
+      workspaces:
+        - name: source-workspace
+          workspace: source-workspace
+      taskSpec:
+        steps:
+          - name: upgrade-chart
+            image: alpine/helm:3.7.0
+            script: |
+              cd /workspace/source/charts/cicd
+              helm upgrade jegor-nl-cicd . --namespace jegor-nl
 
-    # - name: create-github-tag
-    #   runafter: [upgrade-helm-chart]
-    #   workspaces:
-    #     - name: source-workspace
-    #       workspace: source-workspace
-    #   params:
-    #     - name: gitrepositoryurl
-    #       value: "$(params.gitrepositoryurl)"
-    #     - name: imageTag
-    #       value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
-    #   taskSpec:
-    #     params:
-    #       - name: imageTag
-    #         type: string
-    #       - name: gitrepositoryurl
-    #         type: string
-    #     steps:
-    #       - name: create-tag
-    #         image: curlimages/curl:7.78.0
-    #         script: |
-    #           curl -H "Authorization: token $$(cat /root/.git-credentials)" \
-    #                -H "Content-Type: application/json" \
-    #                -X POST $(params.gitrepositoryurl)/git/refs \
-    #                -d '{"ref": "refs/tags/$(params.imageTag)", "sha": "$$(git rev-parse HEAD)"}'
-    #         volumeMounts:
-    #           - name: github-token
-    #             mountPath: /root/.git-credentials
-    #             subPath: token
-    #     volumes:
-    #       - name: github-token
-    #         secret:
-    #           secretName: github-secret
+    - name: create-github-tag
+      runafter: [upgrade-helm-chart]
+      workspaces:
+        - name: source-workspace
+          workspace: source-workspace
+      params:
+        - name: gitrepositoryurl
+          value: "$(params.gitrepositoryurl)"
+        - name: imageTag
+          value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
+      taskSpec:
+        params:
+          - name: imageTag
+            type: string
+          - name: gitrepositoryurl
+            type: string
+        steps:
+          - name: create-tag
+            image: curlimages/curl:7.78.0
+            script: |
+              curl -H "Authorization: token $$(cat /root/.git-credentials)" \
+                   -H "Content-Type: application/json" \
+                   -X POST $(params.gitrepositoryurl)/git/refs \
+                   -d '{"ref": "refs/tags/$(params.imageTag)", "sha": "$$(git rev-parse HEAD)"}'
+            volumeMounts:
+              - name: github-token
+                mountPath: /root/.git-credentials
+                subPath: token
+        volumes:
+          - name: github-token
+            secret:
+              secretName: github-secret
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

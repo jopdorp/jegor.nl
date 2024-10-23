@@ -83,6 +83,11 @@ spec:
             value: $(params.branch)
         pipelineRef:
           name: tekton-build-pipeline
+          params:
+            - name: gitrepositoryurl
+              value: $(tt.params.gitrepositoryurl)
+            - name: branch
+              value: $(tt.params.branch)
         workspaces:
           - name: source-workspace
             persistentVolumeClaim:
