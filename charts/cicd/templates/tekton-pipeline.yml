@@ -6,8 +6,6 @@ metadata:
 spec:
   workspaces:
     - name: source-workspace
-      persistentVolumeClaim:
-        claimName: jegornl-pvc  # Ensure this matches your PVC
   params:
     - name: gitrepositoryurl
       type: string
@@ -24,7 +22,10 @@ spec:
           value: $(params.gitrepositoryurl)
         - name: branch
           value: $(params.branch)
-      taskSpec:
+      taskSpec:      
+        workspaces:
+          - name: source-workspace
+            mountPath: /workspace/source
         params:
           - name: gitrepositoryurl
             type: string
@@ -50,6 +51,9 @@ spec:
         - name: source-workspace
           workspace: source-workspace
       taskSpec:
+        workspaces:
+          - name: source-workspace
+            mountPath: /workspace/source
         results:
           - name: new-image-tag
         steps:
@@ -72,6 +76,9 @@ spec:
         - name: imageTag
           value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
       taskSpec:
+        workspaces:
+          - name: source-workspace
+            mountPath: /workspace/source
         params:
           - name: imageTag
             type: string
@@ -113,6 +120,9 @@ spec:
         - name: source-workspace
           workspace: source-workspace
       taskSpec:
+        workspaces:
+          - name: source-workspace
+            mountPath: /workspace/source
         steps:
           - name: upgrade-chart
             image: alpine/helm:3.7.0
@@ -131,6 +141,9 @@ spec:
         - name: imageTag
           value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
       taskSpec:
+        workspaces:
+          - name: source-workspace
+            mountPath: /workspace/source
         params:
           - name: imageTag
             type: string
