@@ -63,7 +63,7 @@ spec:
             script: |
               #!/usr/bin/env bash
               current_version=$(grep 'imageTag:' charts/jegor-nl/values.yaml | cut -d' ' -f2)
-              version_number=${current_version#v}  # This strips the leading 'v'
+              version_number=${current_version#v}
               IFS='.' read -r major minor patch <<< "$version_number"
               new_version="v$major.$minor.$((patch+1))"
               echo -n "$new_version" > $(results.new-image-tag.path)
@@ -126,8 +126,8 @@ spec:
               echo "https://bot-user:$(cat /root/github-secret-dir/token)@github.com" > /root/.git-credentials
               git config --global credential.helper store
 
-              sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/jegor-nl/values.yaml
-              sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/cicd/values.yaml
+              sed -i "s/imageTag: .*/imageTag: $(params.imageTag)/" charts/jegor-nl/values.yaml
+              sed -i "s/imageTag: .*/imageTag: $(params.imageTag)/" charts/cicd/values.yaml
 
               git add charts/jegor-nl/values.yaml
               git add charts/cicd/values.yaml
