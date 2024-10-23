@@ -164,6 +164,7 @@ spec:
               export KUBECONFIG=/kubeconfig/kubeconfig
               cd /workspace/source/charts/cicd
               helm upgrade jegor-nl-cicd . --namespace jegor-nl
+              
     - name: create-github-tag
       runAfter: [upgrade-helm-chart]
       workspaces:
