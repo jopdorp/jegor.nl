@@ -20,9 +20,9 @@ spec:
           workspace: source-workspace
       params:
         - name: gitrepositoryurl
-          value: $(tt.params.gitrepositoryurl)
+          value: $(params.gitrepositoryurl)
         - name: branch
-          value: $(tt.params.branch)
+          value: $(params.branch)
       taskSpec:
         params:
           - name: gitrepositoryurl

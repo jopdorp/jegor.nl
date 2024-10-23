@@ -19,9 +19,9 @@ spec:
                 port:
                   number: 8080
   tls:
-    - hosts:
-        - webhook.tekton.jegor-nl.k8s.jegor.nl
-      secretName: tekton-listener-tls
+  - hosts:
+      - webhook.tekton.jegor-nl.k8s.jegor.nl
+    secretName: tekton-listener-tls
 ---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: EventListener
@@ -31,12 +31,9 @@ spec:
   serviceAccountName: tekton-robot
   triggers:
     - name: github-push-trigger
-      bindings:
-        - ref: github-push-binding
-      template:
-        ref: github-push-template
       interceptors:
-        - ref:
+        - name: webhook-secret-check
+          ref:
             name: "github"
           params:
             - name: eventTypes
@@ -46,29 +43,24 @@ spec:
               value:
                 secretName: tekton-webhook-secret
                 secretKey: token
-        - ref:
+        - name: filter-main-branch
+          ref:
             name: cel
           params:
             - name: filter
               value: body.ref == 'refs/heads/main'
-        - ref:
+        - name: add-branch-param
+          ref:
             name: cel
           params:
             - name: overlays
               value:
-                - key: branch
-                  expression: "body.ref.split('/').last()"
----
-apiVersion: triggers.tekton.dev/v1beta1
-kind: TriggerBinding
-metadata:
-  name: github-push-binding
-spec:
-  params:
-    - name: gitrepositoryurl
-      value: $(body.repository.clone_url)
-    - name: branch
-      value: $(extensions.branch)
+              - key: branch
+                expression: "body.ref.split('/').last()"
+      bindings:
+        - ref: github-push-binding
+      template:
+        ref: github-push-template
 ---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
@@ -79,7 +71,7 @@ spec:
     - name: gitrepositoryurl
     - name: branch
   resourcetemplates:
-    - apiVersion: tekton.dev/v1beta1
+    - apiVersion: tekton.dev/v1
       kind: PipelineRun
       metadata:
         generateName: github-push-pipelinerun-
