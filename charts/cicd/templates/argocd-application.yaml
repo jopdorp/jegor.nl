@@ -10,6 +10,7 @@ spec:
     path: charts/jegor-nl
     targetRevision: "production"
     helm:
+      releaseName: "jegor-nl"
       valueFiles:
         - values.yaml
   destination:
