@@ -123,7 +123,7 @@ spec:
 
               git config --global user.email "tekton@jopdorp.nl"
               git config --global user.name "Tekton Bot"
-              echo "https://$(cat /workspace/github-secret/token)@github.com" > /root/.git-credentials
+              echo "https://$(cat /root/token)@github.com" > /root/.git-credentials
               git config --global credential.helper store
 
               sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/jegor-nl/values.yaml
@@ -135,7 +135,8 @@ spec:
               git push origin main
             volumeMounts:
               - name: github-token
-                mountPath: /workspace/github-secret
+                mountPath: /root/
+                subPath: token
 
         volumes:
           - name: github-token
