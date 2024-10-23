@@ -18,17 +18,17 @@ spec:
       workspaces:
         - name: source-workspace
           workspace: source-workspace
-      params:
-        - name: gitrepositoryurl
-          value: $(params.gitrepositoryurl)
-        - name: branch
-          value: $(params.branch)
+      # params:
+      #   - name: gitrepositoryurl
+      #     value: $(params.gitrepositoryurl)
+      #   - name: branch
+      #     value: $(params.branch)
       taskSpec:
-        # params:
-        #   - name: gitrepositoryurl
-        #     type: string
-        #   - name: branch
-        #     type: string
+        params:
+          - name: gitrepositoryurl
+            type: string
+          - name: branch
+            type: string
         steps:
           - name: clone-repo
             image: alpine/git
