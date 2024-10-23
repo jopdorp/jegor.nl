@@ -66,7 +66,7 @@ spec:
               version_number=${current_version#v}  # This strips the leading 'v'
               IFS='.' read -r major minor patch <<< "$version_number"
               new_version="v$major.$minor.$((patch+1))"
-              echo "$new_version" | tee $(results.new-image-tag.path)
+              echo "$new_version" > $(results.new-image-tag.path)
         
     - name: build-docker-image
       runAfter: [determine-next-image-tag]
@@ -75,7 +75,7 @@ spec:
           workspace: source-workspace
       params:
         - name: imageTag
-          value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
+          value: $(tasks.determine-next-image-tag.results.new-image-tag)
       taskSpec:
         workspaces:
           - name: source-workspace
