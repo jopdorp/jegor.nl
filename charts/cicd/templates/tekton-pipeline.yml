@@ -126,7 +126,8 @@ spec:
               git config --global user.name "Tekton Bot"
               git add charts/jegor-nl/values.yaml
               git add charts/cicd/values.yaml
-              git commit -m "Authomated update to image tag $(params.imageTag) [ci skip]"
+              git commit -m "Automated update to image tag $(params.imageTag) [ci skip]"
+              git config --global credential.helper store
               git push origin main
             volumeMounts:
               - name: github-token
@@ -136,7 +137,7 @@ spec:
           - name: github-token
             secret:
               secretName: github-secret
-              
+
     - name: upgrade-helm-chart
       runafter: [update-argocd-application-and-values, build-docker-image]
       workspaces:
