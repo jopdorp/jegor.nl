@@ -85,12 +85,17 @@ spec:
             type: string
         steps:
           - name: build
-            image: docker:20.10
+            image: gcr.io/kaniko-project/executor:latest
             script: |
-              cd /workspace/source
-              docker build . -t jegornl:$(params.imageTag)
-              docker tag jegornl:$(params.imageTag) harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag)
-              docker push harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag)
+              /kaniko/executor --context=/workspace/source --dockerfile=/workspace/source/Dockerfile \
+                --destination=harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag)
+            volumeMounts:
+              - name: kaniko-secret
+                mountPath: /kaniko/.docker
+        volumes:
+          - name: kaniko-secret
+            secret:
+              secretName: harbor-credentials
 
     - name: update-argocd-application-and-values
       runAfter: [determine-next-image-tag]
