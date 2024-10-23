@@ -166,7 +166,7 @@ spec:
               helm upgrade jegor-nl-cicd . --namespace jegor-nl
 
     - name: create-github-tag
-      runafter: [upgrade-helm-chart]
+      runAfter: [upgrade-helm-chart]
       workspaces:
         - name: source-workspace
           workspace: source-workspace
@@ -181,25 +181,29 @@ spec:
             mountPath: /workspace
         params:
           - name: imageTag
-            type: string
           - name: gitrepositoryurl
-            type: string
-        steps:
-          - name: create-tag
-            image: curlimages/curl:7.78.0
-            script: |
-              curl -u "bot-user:$(cat /root/.git-credentials/token)" \
-                  -H "Content-Type: application/json" \
-                  -X POST $(params.gitrepositoryurl)/git/refs \
-                  -d '{"ref": "refs/tags/$(params.imageTag)", "sha": "$(git rev-parse HEAD)"}'
-            volumeMounts:
-              - name: github-token
-                mountPath: /root/.git-credentials
-                subPath: token
         volumes:
           - name: github-token
             secret:
               secretName: github-secret
+        steps:
+          - name: create-tag
+            image: alpine/git
+            script: |
+              cd /workspace/source
+
+              git config --global user.email "tekton@jopdorp.nl"
+              git config --global user.name "Tekton Bot"
+              echo "https://bot-user:$(cat /root/github-secret-dir/token)@github.com" > /root/.git-credentials
+              git config --global credential.helper store
+
+              git fetch --all
+              git tag $(params.imageTag)
+              git push origin $(params.imageTag)
+            volumeMounts:
+              - name: github-token
+                mountPath: /root/github-secret-dir
+
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
