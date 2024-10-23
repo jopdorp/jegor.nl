@@ -19,11 +19,11 @@ spec:
       workspaces:
         - name: source-workspace
           workspace: source-workspace
-      # params:
-      #   - name: gitrepositoryurl
-      #     value: $(params.gitrepositoryurl)
-      #   - name: branch
-      #     value: $(params.branch)
+      params:
+        - name: gitrepositoryurl
+          value: $(params.gitrepositoryurl)
+        - name: branch
+          value: $(params.branch)
       taskSpec:
         # params:
         #   - name: gitrepositoryurl
@@ -34,7 +34,7 @@ spec:
           - name: clone-repo
             image: alpine/git
             script: |
-              git clone "$(params.gitrepositoryurl)" -b "$(params.branch)" /workspace/source
+              git clone "$(params.gitrepositoryurl)" -b main /workspace/source
             volumeMounts:
               - name: github-token
                 mountPath: /root/.git-credentials
