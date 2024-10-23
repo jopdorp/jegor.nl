@@ -115,6 +115,10 @@ spec:
             mountPath: /workspace
         params:
           - name: imageTag
+        volumes:
+          - name: github-token
+            secret:
+              secretName: github-secret
         steps:
           - name: update-manifest-and-values
             image: alpine/git
@@ -136,10 +140,6 @@ spec:
             volumeMounts:
               - name: github-token
                 mountPath: /root/github-secret-dir
-        volumes:
-          - name: github-token
-            secret:
-              secretName: github-secret
 
     - name: upgrade-helm-chart
       runafter: [update-argocd-application-and-values, build-docker-image]
@@ -150,12 +150,19 @@ spec:
         workspaces:
           - name: source-workspace
             mountPath: /workspace
+        volumes:
+          - name: kubeconfig-volume
+            secret:
+              secretName: kubeconfig-secret
         steps:
           - name: upgrade-chart
             image: alpine/helm:3.11.1
             script: |
               cd /workspace/source/charts/cicd
-              helm upgrade jegor-nl-cicd . --namespace jegor-nl --service-account tekton-robot
+              helm upgrade jegor-nl-cicd . --namespace jegor-nl
+            volumeMounts:
+              - name: kubeconfig-volume
+                mountPath: /kubeconfig
 
     - name: create-github-tag
       runafter: [upgrade-helm-chart]
