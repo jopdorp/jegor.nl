@@ -120,19 +120,24 @@ spec:
             image: alpine/git
             script: |
               cd /workspace/source
-              sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/jegor-nl/values.yaml
-              sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/cicd/values.yaml
+
               git config --global user.email "tekton@jopdorp.nl"
               git config --global user.name "Tekton Bot"
+              echo "https://$(cat /workspace/github-secret/token)@github.com" > /root/.git-credentials
+              git config --global credential.helper store
+
+              sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/jegor-nl/values.yaml
+              sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/cicd/values.yaml
+
               git add charts/jegor-nl/values.yaml
               git add charts/cicd/values.yaml
               git commit -m "Automated update to image tag $(params.imageTag) [ci skip]"
-              git config --global credential.helper store
               git push origin main
             volumeMounts:
               - name: github-token
-                mountPath: /root/.git-credentials
+                mountPath: /workspace/github-secret
                 subPath: token
+
         volumes:
           - name: github-token
             secret:
