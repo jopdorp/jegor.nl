@@ -61,7 +61,6 @@ spec:
           - name: increment-version
             image: alpine
             script: |
-              #!/usr/bin/env bash
               cd /workspace/source
               current_version=$(grep 'imageTag:' charts/jegor-nl/values.yaml | cut -d' ' -f2)
               IFS='.' read -r major minor patch <<< "$current_version"
