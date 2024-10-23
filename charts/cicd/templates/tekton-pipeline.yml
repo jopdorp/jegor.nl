@@ -188,10 +188,10 @@ spec:
           - name: create-tag
             image: curlimages/curl:7.78.0
             script: |
-              curl -H "Authorization: token $$(cat /root/.git-credentials)" \
-                   -H "Content-Type: application/json" \
-                   -X POST $(params.gitrepositoryurl)/git/refs \
-                   -d '{"ref": "refs/tags/$(params.imageTag)", "sha": "$$(git rev-parse HEAD)"}'
+              curl -u "bot-user:$(cat /root/.git-credentials)" \
+                  -H "Content-Type: application/json" \
+                  -X POST $(params.gitrepositoryurl)/git/refs \
+                  -d '{"ref": "refs/tags/$(params.imageTag)", "sha": "$(git rev-parse HEAD)"}'
             volumeMounts:
               - name: github-token
                 mountPath: /root/.git-credentials
