@@ -63,8 +63,9 @@ spec:
             script: |
               #!/usr/bin/env bash
               current_version=$(grep 'imageTag:' charts/jegor-nl/values.yaml | cut -d' ' -f2)
-              IFS='.' read -r major minor patch <<< "$current_version"
-              new_version="$major.$minor.$((patch+1))"
+              version_number=${current_version#v}  # This strips the leading 'v'
+              IFS='.' read -r major minor patch <<< "$version_number"
+              new_version="v$major.$minor.$((patch+1))"
               echo "$new_version" | tee $(results.new-image-tag.path)
         
     - name: build-docker-image
