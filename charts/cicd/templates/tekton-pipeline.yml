@@ -122,6 +122,8 @@ spec:
               cd /workspace/source
               sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/jegor-nl/values.yaml
               sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/cicd/values.yaml
+              git config --global user.email "tekton@jopdorp.nl"
+              git config --global user.name "Tekton Bot"
               git add charts/jegor-nl/values.yaml
               git add charts/cicd/values.yaml
               git commit -m "Authomated update to image tag $(params.imageTag) [ci skip]"
@@ -138,7 +140,7 @@ spec:
             mountPath: /workspace
         steps:
           - name: upgrade-chart
-            image: alpine/helm:3.7.0
+            image: alpine/helm:3.11.1
             script: |
               cd /workspace/source/charts/cicd
               helm upgrade jegor-nl-cicd . --namespace jegor-nl
