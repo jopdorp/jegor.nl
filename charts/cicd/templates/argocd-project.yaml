@@ -13,3 +13,10 @@ spec:
   clusterResourceWhitelist:
     - group: '*'
       kind: '*'
+  roles:
+    - name: admin
+      policies:
+        - 'p, proj:{{ .Release.Name }}-project:admin, applications, *, {{ .Release.Name }}-project/*, allow'
+        - 'p, proj:{{ .Release.Name }}-project:admin, projects, get, {{ .Release.Name }}-project, allow'
+      groups:
+        - system:authenticated

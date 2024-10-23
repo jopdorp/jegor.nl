@@ -4,11 +4,11 @@ metadata:
   name: {{ .Release.Name }}-deploy-pipeline
   namespace: argocd
 spec:
-  project: jopdorp
+  project: {{ .Release.Name }}-project
   source:
     repoURL: "https://github.com/jopdorp/jegor.nl"
     path: charts/jegor-nl
-    targetRevision: "production"
+    targetRevision: "refs/tags/{{ .Values.imageTag }}"
     helm:
       valueFiles:
         - values.yaml
