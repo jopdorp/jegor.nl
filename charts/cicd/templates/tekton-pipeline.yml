@@ -123,7 +123,7 @@ spec:
 
               git config --global user.email "tekton@jopdorp.nl"
               git config --global user.name "Tekton Bot"
-              echo "https://$(cat /root/github-secret-dir/token)@github.com" > /root/.git-credentials
+              echo "https://bot-user:$(cat /root/github-secret-dir/token)@github.com" > /root/.git-credentials
               git config --global credential.helper store
 
               sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/jegor-nl/values.yaml
