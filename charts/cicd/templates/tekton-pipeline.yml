@@ -174,7 +174,7 @@ spec:
         - name: gitrepositoryurl
           value: "$(params.gitrepositoryurl)"
         - name: imageTag
-          value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
+          value: "$(tasks.determine-next-image-tag.results.new-image-tag)"
       taskSpec:
         workspaces:
           - name: source-workspace
