@@ -86,9 +86,10 @@ spec:
         steps:
           - name: build
             image: gcr.io/kaniko-project/executor:latest
-            script: |
-              /kaniko/executor --context=/workspace/source --dockerfile=/workspace/source/Dockerfile \
-                --destination=harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag)
+            args:
+              - "--dockerfile=/workspace/source/Dockerfile"  # Ensure correct path to Dockerfile
+              - "--context=/workspace/source"  # Use the local workspace as context
+              - "--destination=harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag)"
             volumeMounts:
               - name: kaniko-secret
                 mountPath: /kaniko/.docker
