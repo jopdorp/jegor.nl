@@ -25,7 +25,7 @@ spec:
       taskSpec:      
         workspaces:
           - name: source-workspace
-            mountPath: /workspace/source
+            mountPath: /workspace
         params:
           - name: gitrepositoryurl
             type: string
@@ -53,7 +53,7 @@ spec:
       taskSpec:
         workspaces:
           - name: source-workspace
-            mountPath: /workspace/source
+            mountPath: /workspace
         results:
           - name: new-image-tag
         steps:
@@ -78,7 +78,7 @@ spec:
       taskSpec:
         workspaces:
           - name: source-workspace
-            mountPath: /workspace/source
+            mountPath: /workspace
         params:
           - name: imageTag
             type: string
@@ -100,6 +100,9 @@ spec:
         - name: imageTag
           value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
       taskSpec:
+        workspaces:
+          - name: source-workspace
+            mountPath: /workspace
         params:
           - name: imageTag
         steps:
@@ -122,7 +125,7 @@ spec:
       taskSpec:
         workspaces:
           - name: source-workspace
-            mountPath: /workspace/source
+            mountPath: /workspace
         steps:
           - name: upgrade-chart
             image: alpine/helm:3.7.0
@@ -143,7 +146,7 @@ spec:
       taskSpec:
         workspaces:
           - name: source-workspace
-            mountPath: /workspace/source
+            mountPath: /workspace
         params:
           - name: imageTag
             type: string
