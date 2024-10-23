@@ -188,7 +188,7 @@ spec:
           - name: create-tag
             image: curlimages/curl:7.78.0
             script: |
-              curl -u "bot-user:$(cat /root/.git-credentials)" \
+              curl -u "bot-user:$(cat /root/.git-credentials/token)" \
                   -H "Content-Type: application/json" \
                   -X POST $(params.gitrepositoryurl)/git/refs \
                   -d '{"ref": "refs/tags/$(params.imageTag)", "sha": "$(git rev-parse HEAD)"}'
