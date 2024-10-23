@@ -89,7 +89,7 @@ spec:
             args:
               - "--dockerfile=/workspace/source/Dockerfile"  # Ensure correct path to Dockerfile
               - "--context=/workspace/source"  # Use the local workspace as context
-              - "--destination=harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag)"
+              - "--destination=harbor.k8s.jegor.nl/jopdorp/jegornl:v1.0.6"
             volumeMounts:
               - name: kaniko-secret
                 mountPath: /kaniko/.docker
