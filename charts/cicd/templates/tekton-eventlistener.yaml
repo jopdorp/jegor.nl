@@ -43,6 +43,13 @@ spec:
               value:
                 secretName: tekton-webhook-secret
                 secretKey: token
+        - name: pipeline-skip check
+          ref:
+            name: cel
+          params:
+            - name: filter
+              value: "body.head_commit.message.indexOf('[ci skip]') == -1"
+
         - name: filter-main-branch
           ref:
             name: cel
