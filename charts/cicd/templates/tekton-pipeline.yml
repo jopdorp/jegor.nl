@@ -117,7 +117,7 @@ spec:
           - name: imageTag
         steps:
           - name: update-manifest-and-values
-            image: alpine
+            image: alpine/git
             script: |
               cd /workspace/source
               sed -i "s/imageTag: .*/imageTag: \"$(params.imageTag)\"/" charts/jegor-nl/values.yaml
