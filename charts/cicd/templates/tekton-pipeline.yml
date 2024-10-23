@@ -62,6 +62,7 @@ spec:
             image: bash:latest
             script: |
               #!/usr/bin/env bash
+              cd /workspace/source
               current_version=$(grep 'imageTag:' charts/jegor-nl/values.yaml | cut -d' ' -f2)
               version_number=${current_version#v}
               IFS='.' read -r major minor patch <<< "$version_number"
