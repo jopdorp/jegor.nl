@@ -83,14 +83,12 @@ spec:
       metadata:
         generateName: github-push-pipelinerun-
       spec:
-        serviceAccountName: tekton-robot
         params:
           - name: gitrepositoryurl
             value: $(tt.params.gitrepositoryurl)
           - name: branch
             value: $(tt.params.branch)
         pipelineRef:
-          serviceAccountName: tekton-robot
           name: tekton-build-pipeline
         workspaces:
           - name: source-workspace
