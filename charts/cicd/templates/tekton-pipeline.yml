@@ -6,7 +6,8 @@ metadata:
 spec:
   workspaces:
     - name: source-workspace
-
+      persistentVolumeClaim:
+        claimName: jegornl-pvc  # Ensure this matches your PVC
   params:
     - name: gitrepositoryurl
       type: string
@@ -15,6 +16,9 @@ spec:
 
   tasks:
     - name: pull-code
+      workspaces:
+        - name: source-workspace
+          workspace: source-workspace
       params:
         - name: gitrepositoryurl
           value: $(params.gitrepositoryurl)
@@ -42,6 +46,9 @@ spec:
 
     - name: determine-next-image-tag
       runAfter: [pull-code]
+      workspaces:
+        - name: source-workspace
+          workspace: source-workspace
       taskSpec:
         results:
           - name: new-image-tag
@@ -58,6 +65,9 @@ spec:
         
     - name: build-docker-image
       runAfter: [determine-next-image-tag]
+      workspaces:
+        - name: source-workspace
+          workspace: source-workspace
       params:
         - name: imageTag
           value: "$(tasks.determine-next-image-tag.results.new-image-tag)"  # Use result from previous task
