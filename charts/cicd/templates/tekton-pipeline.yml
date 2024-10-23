@@ -136,7 +136,6 @@ spec:
             volumeMounts:
               - name: github-token
                 mountPath: /workspace/github-secret
-                subPath: token
 
         volumes:
           - name: github-token
