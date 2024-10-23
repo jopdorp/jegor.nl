@@ -156,14 +156,14 @@ spec:
               secretName: kubeconfig-secret
         steps:
           - name: upgrade-chart
-            image: alpine/helm:3.11.1
-            script: |
-              export KUBECONFIG=/kubeconfig/config
-              cd /workspace/source/charts/cicd
-              helm upgrade jegor-nl-cicd . --namespace jegor-nl
             volumeMounts:
               - name: kubeconfig-volume
                 mountPath: /kubeconfig
+            image: alpine/helm:3.11.1
+            script: |
+              export KUBECONFIG=/kubeconfig/kubeconfig
+              cd /workspace/source/charts/cicd
+              helm upgrade jegor-nl-cicd . --namespace jegor-nl
 
     - name: create-github-tag
       runafter: [upgrade-helm-chart]
