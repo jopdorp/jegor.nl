@@ -59,9 +59,9 @@ spec:
           - name: new-image-tag
         steps:
           - name: increment-version
-            image: alpine
+            image: bash:latest
             script: |
-              cd /workspace/source
+              #!/usr/bin/env bash
               current_version=$(grep 'imageTag:' charts/jegor-nl/values.yaml | cut -d' ' -f2)
               IFS='.' read -r major minor patch <<< "$current_version"
               new_version="$major.$minor.$((patch+1))"
