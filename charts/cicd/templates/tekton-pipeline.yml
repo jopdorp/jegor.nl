@@ -11,7 +11,6 @@ spec:
       type: string
     - name: branch
       type: string
-
   tasks:
     - name: pull-code
       workspaces:
