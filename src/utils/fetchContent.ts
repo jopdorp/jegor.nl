@@ -5,7 +5,6 @@ import Page, { PageProps } from "@/components/Page"
 import { GraphQLClient } from 'graphql-request';
 import { marked, Token, Tokens } from 'marked';
 import dotenv from "dotenv";
-import { parse } from "path";
 
 dotenv.config()
 
