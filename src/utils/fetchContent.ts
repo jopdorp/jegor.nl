@@ -27,6 +27,17 @@ type PagesListResponse = {
   };
 };
 
+type NavigationResponse = {
+  navigation: {
+    tree: {
+      locale: string;
+      items: {
+        label: string;
+      }[];
+    }[];
+  };
+};
+
 type SinglePageResponse = {
   pages: {
     single: PageContent;
@@ -85,7 +96,7 @@ async function fetchChildPages(): Promise<Page[]> {
       __typename
     }
   }`;
-  const navigation = await client.request(navigationQuery);
+  const navigation:NavigationResponse = await client.request(navigationQuery);
   const pageOrder = navigation.navigation.tree[0].items.slice(1).map((item: { label: string }) => item.label);
   console.log(navigation);
 
