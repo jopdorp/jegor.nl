@@ -1,5 +1,5 @@
 replicaCount: 2
-imageTag: v1.0.23
+imageTag: v1.0.24
 servicePort: 3000
 ingressHost: "jopdorp.nl"
 releaseName: jegor-nl
