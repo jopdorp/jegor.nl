@@ -18,7 +18,7 @@ const Menu = () => {
           {Object.keys(content.pages).map((page) => (
             <li key={page}>
               <Link href={`/${page.split("/").slice(1).join("/")}`} className="hover:underline">
-                {content.pages[page].title}
+                {content.pages[page].name}
               </Link>
             </li>
           ))}

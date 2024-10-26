@@ -5,6 +5,7 @@ import Page, { PageProps } from "@/components/Page"
 import { GraphQLClient } from 'graphql-request';
 import { marked, Token, Tokens } from 'marked';
 import dotenv from "dotenv";
+import { parse } from "path";
 
 dotenv.config()
 
@@ -42,6 +43,7 @@ export async function fetchAndParseChildPages(): Promise<WebsiteProps> {
   for (const child of childPages) {
     const content = await fetchPageContent(child.id);
     const parsedPage = parsePageContent(content);
+    parsedPage.name = child.title;
     website.pages[child.path] = parsedPage;
   }
 
@@ -62,9 +64,34 @@ async function fetchChildPages(): Promise<Page[]> {
   `;
 
   const data: PagesListResponse = await client.request(query);
+
+  const navigationQuery = `{
+    navigation {
+      tree {
+        locale
+        items {
+          id
+          kind
+          label
+          icon
+          targetType
+          target
+          visibilityMode
+          visibilityGroups
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+  }`;
+  const navigation = await client.request(navigationQuery);
+  const pageOrder = navigation.navigation.tree[0].items.slice(1).map((item: { label: string }) => item.label);
+  console.log(navigation);
+
   return data.pages.list.filter((page: { path: string }) =>
     page.path.startsWith('website/')
-  );; // This returns the list of child pages
+  ).sort((a,b) => pageOrder.indexOf(a.title) - pageOrder.indexOf(b.title));
 }
 
 async function fetchPageContent(pageId: string): Promise<string> {
@@ -100,7 +127,10 @@ function nestTokens(result: PageProps, tokens: Token[], depth = 0): {nested: Pag
       return  {nested: result, skip: i};
     }
     if (child.type === "paragraph") {
-      result.subTitle += `<div>${child.text}</div>`;
+      result.subTitle += `<div>${child.text.replace('\n', '<br/>')}</div>`;
+    }
+    if (child.type === "space") {
+      result.subTitle += `<br/>`;
     }
     if (child.type === "table") {
       result.subTitle += `<table>
