@@ -1,23 +1,24 @@
 'use client';
 
-import { Section, SectionProps } from '@/components/Section';
+import { Section } from '@/components/Section';
 
 export type PageProps = {
   title: string;
-  subtitle?: string;
-  sections?: SectionProps[];
+  subTitle?: string;
+  sections: PageProps[];
+  isEven?: boolean,
 }
 
-export default function Page({title, subtitle, sections}:PageProps) {
+export default function Page({title, subTitle, sections}:PageProps) {
   return (
     <>
       <section id="home" className="bg-foreground text-background dark:text-text-dark px-6 py-24">
         <div className="container mx-auto">
-          <h2 className="text-4xl font-bold">
+          <h1 className={`text-4xl font-semibold text-center mb-12 }`} >
             {title}
-          </h2>
+          </h1>
           <p className="mt-4">
-            {subtitle}
+            {subTitle}
           </p>
         </div>
       </section>

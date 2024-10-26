@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const API_TOKEN = process.env.API_TOKEN!;
-const API_URL = process.env.API_URL!;
+const API_URL = `${process.env.WIKI_URL!}/graphql`;
 
 export async function POST(request: NextRequest) {
   const rawBody = await request.text();

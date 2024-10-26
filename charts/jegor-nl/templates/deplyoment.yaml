@@ -27,8 +27,5 @@ spec:
             secretKeyRef:
               name: jegor-nl-api
               key: API_TOKEN
-        - name: API_URL
-          valueFrom:
-            secretKeyRef:
-              name: jegor-nl-api
-              key: API_URL
+        - name: WIKI_URL
+          value: "https://wiki.jegor.nl"

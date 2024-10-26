@@ -13,8 +13,6 @@ const Menu = () => {
 
   return <header className="py-6 text-center">
     <div className="container mx-auto">
-      <h1 className="text-4xl font-bold">{content.pages['website/home'].title}</h1>
-      <p className="mt-2">{content.pages['website/home'].subtitle}</p>
       <nav className="mt-4">
         <ul className="flex justify-center space-x-6">
           {Object.keys(content.pages).map((page) => (
