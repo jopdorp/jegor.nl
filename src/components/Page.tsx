@@ -17,9 +17,7 @@ export default function Page({title, subTitle, sections}:PageProps) {
           <h1 className={`text-4xl font-semibold text-center mb-12 }`} >
             {title}
           </h1>
-          <p className="mt-4">
-            {subTitle}
-          </p>
+          <p className="mt-4" dangerouslySetInnerHTML={{__html: subTitle || ""}} />
         </div>
       </section>
       {sections?.map((sectionProps, index) => <Section {...sectionProps} isEven={index % 2 === 1} key={sectionProps.title}/>)}
