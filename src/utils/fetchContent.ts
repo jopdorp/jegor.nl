@@ -3,7 +3,7 @@
 import { WebsiteProps } from "@/app/layout";
 import Page, { PageProps } from "@/components/Page"
 import { GraphQLClient } from 'graphql-request';
-import { marked, Token, Tokens, TokensList } from 'marked';
+import { marked, Token, Tokens } from 'marked';
 import dotenv from "dotenv";
 
 dotenv.config()
