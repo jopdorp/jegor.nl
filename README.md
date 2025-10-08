@@ -20,3 +20,4 @@ helm upgrade --install jegor-nl-cicd charts/cicd --namespace jegor-nl --values c
 ```
 
 push a new change to test
+
