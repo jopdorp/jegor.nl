@@ -85,14 +85,36 @@ spec:
             type: string
         steps:
           - name: build
-            image: gcr.io/kaniko-project/executor:latest
-            args:
-              - "--dockerfile=/workspace/source/Dockerfile"
-              - "--context=/workspace/source"
-              - "--destination=harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag)"
+            image: moby/buildkit:rootless
+            securityContext:
+              privileged: false
+              runAsUser: 1000
+              runAsGroup: 1000
+            env:
+              - name: BUILDKITD_FLAGS
+                value: --oci-worker-no-process-sandbox
+              - name: DOCKER_CONFIG
+                value: /docker-config
             volumeMounts:
               - name: docker-config
-                mountPath: /kaniko/.docker
+                mountPath: /docker-config
+            script: |
+              #!/bin/sh
+              set -eux
+
+              echo "🚀 Starting rootless BuildKit build..."
+              buildctl-daemonless.sh build \
+                --frontend dockerfile.v0 \
+                --local context=/workspace/source \
+                --local dockerfile=/workspace/source \
+                --output type=image,name=harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag),push=true,registry.insecure=false \
+                --export-cache type=inline \
+                --import-cache type=registry,ref=harbor.k8s.jegor.nl/jopdorp/jegornl:latest || \
+              buildctl-daemonless.sh build \
+                --frontend dockerfile.v0 \
+                --local context=/workspace/source \
+                --local dockerfile=/workspace/source \
+                --output type=image,name=harbor.k8s.jegor.nl/jopdorp/jegornl:$(params.imageTag),push=true,registry.insecure=false
         volumes:
           - name: docker-config
             secret:
