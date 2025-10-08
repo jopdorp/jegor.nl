@@ -5,3 +5,4 @@ ingressHost: "jopdorp.nl"
 releaseName: jegor-nl
 dockerRegistry: harbor.k8s.jegor.nl/jopdorp
 certManagerEmail: "admin@jegor.nl"
+
