@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 1
 imageTag: v1.0.24
 servicePort: 3000
 ingressHost: "jopdorp.nl"
