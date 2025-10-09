@@ -85,7 +85,7 @@ spec:
             type: string
         steps:
           - name: build
-            image: moby/buildkit:rootless
+            image: moby/buildkit:latest
             securityContext:
               privileged: false
               runAsUser: 1000
@@ -102,7 +102,7 @@ spec:
               #!/bin/sh
               set -eux
 
-              echo "🚀 Starting rootless BuildKit build..."
+              echo "🚀 Starting BuildKit build..."
               buildctl-daemonless.sh build \
                 --frontend dockerfile.v0 \
                 --local context=/workspace/source \
