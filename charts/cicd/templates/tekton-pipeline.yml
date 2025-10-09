@@ -67,7 +67,6 @@ spec:
               IFS='.' read -r major minor patch <<< "$version_number"
               new_version="v$major.$minor.$((patch+1))"
               echo -n "$new_version" > $(results.new-image-tag.path)
-        
     - name: build-docker-image
       runAfter: [determine-next-image-tag]
       workspaces:
@@ -87,12 +86,8 @@ spec:
           - name: build
             image: moby/buildkit:latest
             securityContext:
-              privileged: false
-              runAsUser: 1000
-              runAsGroup: 1000
+              privileged: true
             env:
-              - name: BUILDKITD_FLAGS
-                value: --oci-worker-no-process-sandbox
               - name: DOCKER_CONFIG
                 value: /docker-config
             volumeMounts:
@@ -102,7 +97,7 @@ spec:
               #!/bin/sh
               set -eux
 
-              echo "🚀 Starting BuildKit build..."
+              echo "🚀 Starting BuildKit build with privileged mode..."
               buildctl-daemonless.sh build \
                 --frontend dockerfile.v0 \
                 --local context=/workspace/source \
