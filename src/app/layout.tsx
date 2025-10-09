@@ -35,8 +35,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <title>Portfolio - Jegor van Opdorp</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <script
-    src="https://analytics.homii.local/api/script.js"
-    data-site-id="1"
+    src="https://analytics.staging.cloud.homii.app/api/script.js"
+    data-site-id="2"
     defer
 ></script>
       </head>
